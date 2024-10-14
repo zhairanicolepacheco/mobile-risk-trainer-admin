@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "995527716853",
+    "project_id": "mrt-project-2bc66",
+    "storage_bucket": "mrt-project-2bc66.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:995527716853:android:b292a19a476a736bc4fabc",
+        "android_client_info": {
+          "package_name": "com.admin_aira.AuthAdmin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqzL9guvc_H3P3EVRyZ0BU5-8MJXaEAUE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
