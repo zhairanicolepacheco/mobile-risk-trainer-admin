@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "AuthAdmin",
+    "slug": "AuthAdmin",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/mrt_icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/mrt.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.SEND_SMS"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/mrt_icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.admin_aira.AuthAdmin"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "062d39b7-2960-49d8-9dbe-3968823366d6"
+      }
+    }
+  }
+}
