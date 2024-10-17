@@ -109,9 +109,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.authadmin"
+    namespace 'com.admin_aira.adminModule'
     defaultConfig {
-        applicationId 'com.admin_aira.AuthAdmin'
+        applicationId 'com.admin_aira.adminModule'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

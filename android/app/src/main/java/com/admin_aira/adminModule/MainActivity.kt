@@ -1,4 +1,4 @@
-package com.admin_aira.AuthAdmin
+package com.admin_aira.adminModule
 
 import android.os.Build
 import android.os.Bundle
