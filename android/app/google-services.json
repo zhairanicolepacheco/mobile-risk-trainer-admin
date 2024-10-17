@@ -1,21 +1,40 @@
 {
   "project_info": {
-    "project_number": "995527716853",
-    "project_id": "mrt-project-2bc66",
-    "storage_bucket": "mrt-project-2bc66.appspot.com"
+    "project_number": "1011099438721",
+    "project_id": "thesis-ff0fe",
+    "storage_bucket": "thesis-ff0fe.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:995527716853:android:b292a19a476a736bc4fabc",
+        "mobilesdk_app_id": "1:1011099438721:android:05d5baa69d0939d67a0780",
         "android_client_info": {
-          "package_name": "com.admin_aira.AuthAdmin"
+          "package_name": "com.admin_aira.adminModule"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDqzL9guvc_H3P3EVRyZ0BU5-8MJXaEAUE"
+          "current_key": "AIzaSyDI-R6b_PGrX0leePlV97lWVNxHXLEEEu8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011099438721:android:40ddd879aa77e0637a0780",
+        "android_client_info": {
+          "package_name": "com.admin_aira.usermodule"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDI-R6b_PGrX0leePlV97lWVNxHXLEEEu8"
         }
       ],
       "services": {

@@ -1,24 +1,33 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {
-  Text, View, Image, SafeAreaView, TextInput, TouchableHighlight,
-  Keyboard, TouchableWithoutFeedback, Alert, TouchableOpacity
+  Text,
+  View,
+  Image,
+  SafeAreaView,
+  TextInput,
+  TouchableHighlight,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Alert,
+  TouchableOpacity
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-
+import { Ionicons } from '@expo/vector-icons';
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from 'expo-router'; // Using useRouter
+import styles from './styles/styles';
 
-import styles from '../style/styles';
+console.log("Login component rendered");
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const navigation = useNavigation();
+  const router = useRouter();
 
   const handleLogin = async () => {
+    console.log("Login attempt with email:", email);
     try {
       // Sign in with email and password
       const userCredential = await auth().signInWithEmailAndPassword(email, password);
@@ -31,15 +40,19 @@ export default function Login() {
         .get();
 
       if (userDocument.exists) {
-        // If existing user, navigate to dashboard
-        navigation.navigate("Dashboard");
+        console.log("User found in Firestore, navigating to tabs.");
+        router.push('/(tabs)'); // Navigate to the tabs
       } else {
-        // If user does not exist in Firestore, handle accordingly
         Alert.alert("User not found", "No user found in our records. Please register.");
       }
     } catch (error) {
-      console.log("Login error: ", error);
-      Alert.alert("Login failed", error.message);
+      if (error instanceof Error) {
+        console.log("Login error:", error);
+        Alert.alert("Login failed", error.message);
+      } else {
+        console.log("An unknown error occurred");
+        Alert.alert("Login failed", "An unexpected error occurred. Please try again.");
+      }
     }
   };
 
@@ -52,7 +65,7 @@ export default function Login() {
       <SafeAreaView style={styles.container}>
         <StatusBar style="auto" />
         <Image
-          source={require('../assets/mrt.png')}
+          source={require('@/assets/images/mrt.png')}
           style={{ width: 175, height: 190 }}
         />
 
@@ -63,7 +76,7 @@ export default function Login() {
         <Text style={styles.subheader}>Please log in to continue.</Text>
 
         <View style={styles.inputContainer}>
-          <Icon name="envelope" size={20} color="#888" style={styles.icon} />
+          <Ionicons name="mail-outline" size={20} color="#888" style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Email"
@@ -75,7 +88,7 @@ export default function Login() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Icon name="lock" size={20} color="#888" style={styles.icon} />
+          <Ionicons name="lock-closed-outline" size={20} color="#888" style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Password"
@@ -85,7 +98,7 @@ export default function Login() {
             placeholderTextColor="#888"
           />
           <TouchableOpacity onPress={togglePasswordVisibility} style={styles.icon}>
-            <Icon name={showPassword ? "eye-slash" : "eye"} size={20} color="#888" />
+            <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color="#888" />
           </TouchableOpacity>
         </View>
 

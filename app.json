@@ -1,13 +1,14 @@
 {
   "expo": {
-    "name": "AuthAdmin",
-    "slug": "AuthAdmin",
+    "name": "adminModule",
+    "slug": "adminModule",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/mrt_icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/images/mrt_icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/mrt.png",
+      "image": "./assets/images/mrt.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -20,17 +21,27 @@
         "android.permission.SEND_SMS"
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/mrt_icon.png",
+        "foregroundImage": "./assets/images/mrt_icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.admin_aira.AuthAdmin"
+      "package": "com.admin_aira.adminModule"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth"
+    ],
+    "experiments": {
+      "typedRoutes": true
     },
     "extra": {
       "eas": {
-        "projectId": "062d39b7-2960-49d8-9dbe-3968823366d6"
+        "projectId": "49f94974-dfb7-4f0f-8cbf-7c9315e79cb8"
       }
     }
   }
