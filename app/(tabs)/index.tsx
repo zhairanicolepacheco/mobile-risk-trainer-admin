@@ -1,160 +1,173 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TextInput, FlatList, TouchableOpacity, Modal } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Image, KeyboardAvoidingView, Platform } from 'react-native';
-import * as SMS from 'expo-sms';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../../firebaseConfig';
+import AdminSMS from '../components/adminSMS'; 
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-interface SMSState {
-  number: string;
-  message: string;
+
+interface User {
+  id: string;
+  username: string;
+  email: string;
+  phoneNumber: string;
 }
 
-export default function AdminSMS() {
-  const [smsState, setSmsState] = useState<SMSState>({
-    number: '',
-    message: '',
-  });
+export default function Dashboard() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const handleInputChange = (key: keyof SMSState, value: string) => {
-    setSmsState(prevState => ({ ...prevState, [key]: value }));
-  };
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
-  const checkSMS = async () => {
+  useEffect(() => {
+    const lowercasedQuery = searchQuery.toLowerCase();
+    const filtered = users.filter(user => 
+      user.username.toLowerCase().includes(lowercasedQuery) ||
+      user.email.toLowerCase().includes(lowercasedQuery) ||
+      user.phoneNumber.includes(searchQuery)
+    );
+    setFilteredUsers(filtered);
+  }, [searchQuery, users]);
+
+  const fetchUsers = async () => {
     try {
-      const isAvailable = await SMS.isAvailableAsync();
-      Alert.alert(
-        'SMS Availability',
-        isAvailable ? 'SMS is available on this device' : 'SMS is not available on this device'
-      );
+      // Modified query to only fetch users with role "client"
+      const q = query(collection(db, "users"), where("role", "==", "client"));
+      const querySnapshot = await getDocs(q);
+      const fetchedUsers: User[] = [];
+      querySnapshot.forEach((doc) => {
+        fetchedUsers.push({ id: doc.id, ...doc.data() } as User);
+      });
+      setUsers(fetchedUsers);
     } catch (error) {
-      console.error('Error checking SMS availability:', error);
-      Alert.alert('Error', 'Failed to check SMS availability');
+      console.error("Error fetching users:", error);
     }
   };
 
-  const sendSMS = async () => {
-    const { number, message } = smsState;
-    if (!number || !message) {
-      Alert.alert('Error', 'Please enter both a phone number and a message');
-      return;
-    }
-
-    try {
-      const { result } = await SMS.sendSMSAsync([number], message);
-      if (result === 'sent') {
-        Alert.alert('Success', 'Message sent successfully');
-        setSmsState({ number: '', message: '' });
-      } else {
-        Alert.alert('Error', 'Failed to send message');
-      }
-    } catch (error) {
-      console.error('Error sending SMS:', error);
-      Alert.alert('Error', 'An error occurred while sending the message');
-    }
-  };
+  const renderUserItem = ({ item }: { item: User }) => (
+    <View style={styles.userItem}>
+      <Text style={styles.username}>{item.username}</Text>
+      <Text style={styles.userInfo}>{item.email}</Text>
+      <Text style={styles.userInfo}>{item.phoneNumber}</Text>
+    </View>
+  );
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
-    >
+    <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
-      <Image
-        source={require('@/assets/images/mrt.png')}
-        style={styles.logo}
-        resizeMode="contain"
-        accessibilityLabel="MRT Logo"
-      />
-      <Text style={styles.title}>Admin Side SMS</Text>
-
-      <TouchableOpacity 
-        style={styles.button} 
-        onPress={checkSMS}
-        accessibilityLabel="Check SMS Availability"
-        accessibilityHint="Checks if SMS functionality is available on this device"
-      >
-        <Text style={styles.buttonText}>Check SMS Availability</Text>
-      </TouchableOpacity>
-
+      <View style={styles.header}>
+        <Text style={styles.title}>Client Accounts</Text>
+        <TouchableOpacity
+          style={styles.smsButton}
+          onPress={() => setIsModalVisible(true)}
+        >
+          <Text style={styles.smsButtonText}>Send SMS</Text>
+        </TouchableOpacity>
+      </View>
       <TextInput
-        style={styles.input}
-        placeholder='Enter Phone Number'
-        value={smsState.number}
-        onChangeText={(value) => handleInputChange('number', value)}
-        keyboardType='phone-pad'
-        accessibilityLabel="Phone Number Input"
+        style={styles.searchInput}
+        placeholder="Search clients..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
       />
-
-      <TextInput
-        style={[styles.input, styles.messageInput]}
-        placeholder='Enter Message'
-        value={smsState.message}
-        onChangeText={(value) => handleInputChange('message', value)}
-        multiline
-        accessibilityLabel="Message Input"
+      <FlatList
+        data={filteredUsers}
+        renderItem={renderUserItem}
+        keyExtractor={(item) => item.id}
+        style={styles.list}
+        ListEmptyComponent={
+          <Text style={styles.emptyListText}>No clients found</Text>
+        }
       />
-
-      <TouchableOpacity 
-        style={styles.button} 
-        onPress={sendSMS}
-        accessibilityLabel="Send Message"
-        accessibilityHint="Sends the SMS message to the specified number"
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => setIsModalVisible(false)}
       >
-        <Text style={styles.buttonText}>Send Message</Text>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
+        <View style={styles.modalView}>
+          <AdminSMS onClose={() => setIsModalVisible(false)} />
+        </View>
+      </Modal>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    padding: 20,
+    backgroundColor: '#f5f5f5',
   },
-  logo: {
-    width: '100%',
-    height: 180,
-    marginBottom: 20,
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    padding: 16,
+    backgroundColor: '#006769',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  input: {
-    borderColor: '#d9d9d9',
-    borderWidth: 2,
-    borderRadius: 20,
-    marginTop: 20,
-    backgroundColor: '#f9f9f9',
-    width: '100%',
-    height: 50,
-    paddingHorizontal: 15,
-  },
-  messageInput: {
-    height: 100,
-    textAlignVertical: 'top',
-    paddingTop: 15,
-  },
-  button: {
-    height: 50,
-    width: '100%',
-    backgroundColor: '#059212',
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    marginTop: 20,
-  },
-  buttonText: {
     color: '#fff',
-    fontSize: 16,
+  },
+  smsButton: {
+    backgroundColor: '#059212',
+    padding: 10,
+    borderRadius: 5,
+  },
+  smsButtonText: {
+    color: '#fff',
     fontWeight: 'bold',
+    alignSelf: 'center',
+  },
+  searchInput: {
+    height: 40,
+    margin: 15,
+    borderWidth: 1,
+    borderColor: '#757575',
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#fff',
+  },
+  list: {
+    flex: 1,
+  },
+  userItem: {
+    backgroundColor: '#fff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  username: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  userInfo: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 4,
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  emptyListText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: '#666',
   },
 });

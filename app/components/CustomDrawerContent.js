@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, Alert, StyleSheet } from 'react-native';
 import { DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
-import { useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import auth from '@react-native-firebase/auth'; // Make sure to import Firebase Auth
+import auth from '@react-native-firebase/auth';
 
-export default function CustomDrawerContent(props) {
-  const router = useRouter();
+export default function Component(props) {
+  const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const tintColor = Colors[colorScheme ?? 'light'].tint;
 
@@ -22,9 +22,13 @@ export default function CustomDrawerContent(props) {
           text: "Sign Out",
           onPress: async () => {
             try {
-              await auth().signOut(); // Sign out from Firebase
+              await auth().signOut();
               console.log("User signed out");
-              router.replace('login'); // Redirect to the login screen after sign out
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'index' }],
+              });
+              console.log("User redirected to login page");
             } catch (error) {
               console.error("Error signing out: ", error);
               Alert.alert("Error", "Failed to sign out. Please try again.");
@@ -60,5 +64,8 @@ const styles = StyleSheet.create({
   drawerHeaderText: {
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  signOutLabel: {
+    // Add any specific styles for the sign out label if needed
   },
 });
