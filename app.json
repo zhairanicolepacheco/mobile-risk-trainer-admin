@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "adminModule",
-    "slug": "adminModule",
+    "name": "MrtAdmin",
+    "slug": "MrtAdmin",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/mrt_icon.png",
+    "icon": "./assets/images/mrt_logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -21,10 +21,10 @@
         "android.permission.SEND_SMS"
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/mrt_icon.png",
+        "foregroundImage": "./assets/images/mrt_logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.admin_aira.adminModule"
+      "package": "com.admin_aira.MrtAdmin"
     },
     "web": {
       "bundler": "metro",
@@ -41,7 +41,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "49f94974-dfb7-4f0f-8cbf-7c9315e79cb8"
+        "projectId": "9b19ea35-5d38-4469-b56a-29b04fc6c806"
       }
     }
   }

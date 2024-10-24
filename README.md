@@ -48,9 +48,3 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-
-
-
-//dev build apk
-eas build --platform android --profile development
-https://expo.dev/accounts/admin_aira/projects/adminModule/builds/71a69dbe-0897-4848-81d8-77c76f2817d6
