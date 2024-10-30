@@ -70,7 +70,7 @@ export default function AdminSMS({ onClose }: AdminSMSProps) {
       );
     } catch (error) {
       console.error('Error checking SMS availability:', error);
-      Alert.alert('Error', 'Failed to check SMS availability');
+      // Alert.alert('Error', 'Failed to check SMS availability');
     }
   };
 
@@ -87,7 +87,8 @@ export default function AdminSMS({ onClose }: AdminSMSProps) {
         Alert.alert('Success', 'Messages sent successfully');
         fetchRandomMessage(); // Fetch a new random message after sending
       } else {
-        Alert.alert('Error', 'Failed to send messages');
+        console.error('Error failed to send messages');
+        // Alert.alert('Error', 'Failed to send messages');
       }
     } catch (error) {
       console.error('Error sending SMS:', error);
