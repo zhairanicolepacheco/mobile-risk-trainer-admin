@@ -26,7 +26,7 @@ export default function AdminReportedContactsList() {
   useEffect(() => {
     const fetchReportedContacts = async () => {
       try {
-        const reportedContactsRef = firestore().collectionGroup('reportedContacts');
+        const reportedContactsRef = firestore().collectionGroup('reportedNumbers');
         const snapshot = await reportedContactsRef.get();
         
         const fetchedContacts = await Promise.all(snapshot.docs.map(async (doc) => {
